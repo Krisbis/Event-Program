@@ -23,6 +23,7 @@ public class Main {
         // EventManager constructor will use ConfigManager to get the file path
         ConfigManager configManager = new ConfigManager();
         EventManager eventManager = new EventManager(configManager);
+        EncrManager encrManager = new EncrManager();
 
         String command = args[0];
         String filePath = System.getenv("EVENTS_FILE_PATH"); // Get file path from environment variable
@@ -46,6 +47,12 @@ public class Main {
             case "config":
                 handleConfigCommand(args, configManager);
                 break;
+            case "encrypt":
+                handleEncryptCommand(args, encrManager);
+                break;
+            case "decrypt":
+                handleDecryptCommand(args, encrManager);
+                break;
             case "--help":
                 System.out.println(GREEN + "Supported commands: list, add, delete, config" + RESET);
                 System.out.println(
@@ -58,6 +65,8 @@ public class Main {
                         + " \n--date \n--category \n--description \n--all \n--file \n--dry-run " + RESET);
                 System.out.println("Options for" + GREEN + " config " + RESET + "command:" + BLACK
                         + " \n--set-file-path \n--get-file-path \n--reset-file-path" + RESET);
+                System.out.println("Options for" + GREEN + " encrypt " + RESET + "command:" + BLACK + " \n--password"
+                        + RESET);
                 System.out.println();
                 System.out.println(YELLOW + "\t\t!! SPECIAL WARNING !!" + BLACK);
                 System.out.println("Be extremely careful using " + YELLOW + "delete --all " + BLACK + "and " + YELLOW
@@ -268,6 +277,75 @@ public class Main {
         } else {
             System.out.println(
                     RED + "Invalid arguments. Please refer to " + BLACK + "java Main.java config --help" + RESET);
+        }
+    }
+
+    // ------------------------ENCRYPT COMMAND--------------------------
+    private static void handleEncryptCommand(String[] args, EncrManager encrManager) {
+        // Functionality to encrypt the events file based on command-line arguments
+        // This can be used to encrypt the events file using a password
+        // Example: java Main encrypt --password mypassword
+
+        String RESET = "\u001B[0m";
+        String GREEN = "\u001B[32m";
+        String RED = "\u001B[31m";
+        String YELLOW = "\u001B[33m";
+        String BLACK = "\u001B[30m";
+
+        List<String> argList = Arrays.asList(args);
+        if (argList.contains("--help") || argList.contains("-h") || argList.contains("?")) {
+            System.out.println("Usage: " + GREEN + "java Main encrypt " + BLACK + "[<options>]" + RESET);
+            System.out.println("Options:");
+            System.out
+                    .println(BLACK + "  --password <password>" + RESET + "\tEncrypt the events file using a password");
+        } else if (argList.contains("--password")) {
+            int passwordIndex = argList.indexOf("--password");
+            String password = args[passwordIndex + 1];
+            System.out.println(BLACK + "Encrypting events file with password: " + YELLOW + password + RESET);
+            // Encrypt the events file using EncrManager
+            try {
+                EncrManager.encryptCsv(password);
+            } catch (Exception e) {
+                // Handle the exception appropriately, e.g., log it or display an error message
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println(
+                    RED + "Invalid arguments. Please refer to " + BLACK + "java Main.java encrypt --help" + RESET);
+        }
+    }
+
+    // ------------------------DECRYPT COMMAND--------------------------
+    private static void handleDecryptCommand(String[] args, EncrManager encrManager) {
+        // Functionality to decrypt the events file based on command-line arguments
+        // This can be used to decrypt the events file using a password
+        // Example: java Main decrypt --password mypassword
+
+        String RESET = "\u001B[0m";
+        String GREEN = "\u001B[32m";
+        String RED = "\u001B[31m";
+        String YELLOW = "\u001B[33m";
+        String BLACK = "\u001B[30m";
+
+        List<String> argList = Arrays.asList(args);
+        if (argList.contains("--help") || argList.contains("-h") || argList.contains("?")) {
+            System.out.println("Usage: " + GREEN + "java Main decrypt " + BLACK + "[<options>]" + RESET);
+            System.out.println("Options:");
+            System.out
+                    .println(BLACK + "  --password <password>" + RESET + "\tDecrypt the events file using a password");
+        } else if (argList.contains("--password")) {
+            int passwordIndex = argList.indexOf("--password");
+            String password = args[passwordIndex + 1];
+            System.out.println(BLACK + "Decrypting events file with password: " + YELLOW + password + RESET);
+            // Decrypt the events file using EncrManager
+            try {
+                EncrManager.decryptCsv(password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println(
+                    RED + "Invalid arguments. Please refer to " + BLACK + "java Main.java decrypt --help" + RESET);
         }
     }
 }

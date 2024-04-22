@@ -7,10 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 
 public class EventManager {
     private List<Event> events;
     private String filePath;
+    boolean loadingFromFile = false;
 
     public EventManager(ConfigManager configManager) {
         // This is the constructor that is responsible for initializing
@@ -32,7 +34,6 @@ public class EventManager {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
             for (int i = 1; i < lines.size(); i++) { // Skip the first line (header)
                 String[] parts = lines.get(i).split(",");
-                // Assuming date format is yyyy-MM-dd
                 LocalDate date = LocalDate.parse(parts[0]);
                 String category = parts[1];
                 String description = parts[2];
@@ -47,15 +48,21 @@ public class EventManager {
     // Save events to CSV file
     private void saveEventsToFile() {
         try {
-            List<String> lines = events.stream()
-                    .map(event -> String.join(",", event.getDate().toString(), event.getCategory(),
-                            event.getDescription()))
-                    .collect(Collectors.toList());
-            Files.write(Paths.get(filePath), lines, StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+            // Get the newest event
+            Event newestEvent = events.get(events.size() - 1);
+    
+            // Create the line for the newest event
+            String newLine = String.join(",", newestEvent.getDate().toString(), newestEvent.getCategory(),
+                    newestEvent.getDescription());
+    
+            // Write the new line to the file
+            Files.write(Paths.get(filePath), Collections.singletonList(newLine), StandardOpenOption.APPEND,
+                    StandardOpenOption.CREATE);
         } catch (IOException e) {
             System.err.println("Error saving events to file: " + e.getMessage());
         }
     }
+    
 
     private void deleteEventFromFile(Event event) {
         try {

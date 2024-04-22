@@ -9,6 +9,7 @@ public class Main {
         String GREEN = "\u001B[32m";
         String RED = "\u001B[31m";
         String BLACK = "\u001B[30m";
+        String YELLOW = "\u001B[33m";
 
         if (args.length == 0) {
             System.out.println(
@@ -46,7 +47,7 @@ public class Main {
                 handleConfigCommand(args, configManager);
                 break;
             case "--help":
-                System.out.println(GREEN + "Supported commands: list, add, delete" + RESET);
+                System.out.println(GREEN + "Supported commands: list, add, delete, config" + RESET);
                 System.out.println(
                         "Options for" + GREEN + " list " + RESET + "command: \n" + BLACK
                                 + "--today \n--before-date \n--after-date \n--between-dates \n--category \n--all"
@@ -56,7 +57,16 @@ public class Main {
                 System.out.println("Options for" + GREEN + " delete " + RESET + "command:" + BLACK
                         + " \n--date \n--category \n--description \n--all \n--file \n--dry-run " + RESET);
                 System.out.println("Options for" + GREEN + " config " + RESET + "command:" + BLACK
-                        + " \n--set-file-path \n--get-file-path \n--reset-file-path"+ RESET);
+                        + " \n--set-file-path \n--get-file-path \n--reset-file-path" + RESET);
+                System.out.println();
+                System.out.println(YELLOW + "\t\t!! SPECIAL WARNING !!" + BLACK);
+                System.out.println("Be extremely careful using " + YELLOW + "delete --all " + BLACK + "and " + YELLOW
+                        + "--file " + BLACK + "flags");
+                System.out.println("as they will delete all events AND the whole file.");
+                System.out.println("Use --dry-run to preview the events that will be deleted.");
+                System.out.println(
+                        "Check your file path using" + YELLOW + " java Main config --get-file-path" + BLACK + "");
+                System.out.println("before using these flags.\n" + RESET);
                 System.out
                         .println(GREEN + "Use 'java Main <command> --help' for more information on a command." + RESET);
                 break;
@@ -242,10 +252,10 @@ public class Main {
             String newFilePath = args[filePathIndex + 1];
             System.out.println(BLACK + "Setting file path to: " + YELLOW + newFilePath + RESET);
             // Set the file path using ConfigManager
-            configManager.setFilePath(newFilePath);
+            ConfigManager.setFilePath(newFilePath);
         } else if (argList.contains("--get-file-path")) {
             // Get the file path using ConfigManager
-            String currentFilePath = configManager.getFilePath();
+            String currentFilePath = ConfigManager.getFilePath();
             if (currentFilePath != null) {
                 System.out.println(BLACK + "File path is set to: " + YELLOW + currentFilePath + RESET);
             } else {
@@ -253,7 +263,7 @@ public class Main {
             }
         } else if (argList.contains("--reset-file-path")) {
             // Reset the file path using ConfigManager
-            configManager.setFilePath(null);
+            ConfigManager.setFilePath(null);
             System.out.println(BLACK + "File path is reset.");
         } else {
             System.out.println(

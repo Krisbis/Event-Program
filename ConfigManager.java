@@ -26,6 +26,7 @@ public class ConfigManager {
         }
     }
 
+    // Setters and getters for the file path
     public static void setFilePath(String filePath) {
         properties.setProperty("EVENTS_FILE_PATH", filePath);
         saveConfig();
@@ -35,6 +36,7 @@ public class ConfigManager {
         return properties.getProperty("EVENTS_FILE_PATH");
     }
 
+    // Save the properties to the config file
     private static void saveConfig() {
         try (FileOutputStream fos = new FileOutputStream(CONFIG_FILE)) {
             properties.store(fos, null);

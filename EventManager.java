@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.nio.file.StandardOpenOption;
@@ -12,9 +11,8 @@ import java.util.Collections;
 public class EventManager {
     private List<Event> events;
     private String filePath;
-    boolean loadingFromFile = false;
 
-    public EventManager(ConfigManager configManager) {
+    public EventManager() {
         // This is the constructor that is responsible for initializing
         // correct file path when the program starts
         this.events = new ArrayList<>();

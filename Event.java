@@ -36,6 +36,7 @@ public class Event {
         this.description = description;
     }
 
+    // Method to print the Event object in a readable (and passable) format.
     @Override
     public String toString() {
         return "Event{" +
@@ -45,6 +46,7 @@ public class Event {
                 '}';
     }
 
+    // Method to compare two Event objects based on their date, category, and description.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,6 +57,7 @@ public class Event {
                description.equals(event.description);
     }
 
+    // Method to generate a hash code for the Event object based on its date, category, and description.
     @Override
     public int hashCode() {
         int result = date.hashCode();

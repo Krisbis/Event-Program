@@ -22,7 +22,7 @@ public class Main {
         // Pass the ConfigManager instance to EventManager
         // EventManager constructor will use ConfigManager to get the file path
         ConfigManager configManager = new ConfigManager();
-        EventManager eventManager = new EventManager(configManager);
+        EventManager eventManager = new EventManager();
         EncrManager encrManager = new EncrManager();
 
         String command = args[0];
@@ -66,6 +66,8 @@ public class Main {
                 System.out.println("Options for" + GREEN + " config " + RESET + "command:" + BLACK
                         + " \n--set-file-path \n--get-file-path \n--reset-file-path" + RESET);
                 System.out.println("Options for" + GREEN + " encrypt " + RESET + "command:" + BLACK + " \n--password"
+                        + RESET);
+                System.out.println("Options for" + GREEN + " decrypt " + RESET + "command:" + BLACK + " \n--password"
                         + RESET);
                 System.out.println();
                 System.out.println(YELLOW + "\t\t!! SPECIAL WARNING !!" + BLACK);
@@ -116,7 +118,7 @@ public class Main {
             int index = argList.indexOf("--before-date");
             LocalDate date = LocalDate.parse(args[index + 1]);
             eventManager.showEventsBeforeDate(date);
-        } // Add other flag checks and corresponding actions
+        }
         else if (argList.contains("--category")) {
             // Show events for a specific category
             int index = argList.indexOf("--category");
@@ -181,7 +183,6 @@ public class Main {
     private static void handleDeleteCommand(String[] args, EventManager eventManager) {
         // Functionality to delete events based on command-line arguments
 
-        // map the ANSI escape codes to the colors array
         String RESET = "\u001B[0m";
         String GREEN = "\u001B[32m";
         String RED = "\u001B[31m";
@@ -306,7 +307,6 @@ public class Main {
             try {
                 EncrManager.encryptCsv(password);
             } catch (Exception e) {
-                // Handle the exception appropriately, e.g., log it or display an error message
                 e.printStackTrace();
             }
         } else {

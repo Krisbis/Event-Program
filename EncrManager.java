@@ -7,20 +7,20 @@ import java.security.spec.*;
 public class EncrManager {
 
     private static final String ALGORITHM = "AES";
-    private static final int KEY_SIZE = 256; // Consider using 256-bit key for stronger security
+    private static final int KEY_SIZE = 256;
 
     public static void encryptCsv(String password) throws Exception {
         try {
             // Generate random salt
             byte[] salt = new byte[8];
-            SecureRandom random = SecureRandom.getInstanceStrong(); // Use strong random number generator
+            SecureRandom random = SecureRandom.getInstanceStrong(); // Strong random number generator
             random.nextBytes(salt);
 
             // Derive key from password using PBKDF2 with the salt
             SecretKeySpec keySpec = generateKey(password, salt);
 
             // Encryption steps
-            String inputCsvPath = ConfigManager.getFilePath(); // Assuming ConfigManager provides file path
+            String inputCsvPath = ConfigManager.getFilePath();
             byte[] plaintext = Files.readAllBytes(Paths.get(inputCsvPath));
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
@@ -41,10 +41,10 @@ public class EncrManager {
     }
 
     public static void decryptCsv(String password) throws Exception {
-        String encryptedCsvPath = ConfigManager.getFilePath(); // Assuming ConfigManager provides file path
+        String encryptedCsvPath = ConfigManager.getFilePath();
         byte[] combinedData = Files.readAllBytes(Paths.get(encryptedCsvPath));
 
-        // Extract salt from the beginning (assuming fixed size)
+        // Extract salt from the beginning of the file
         byte[] salt = new byte[8];
         System.arraycopy(combinedData, 0, salt, 0, salt.length);
 
@@ -67,7 +67,7 @@ public class EncrManager {
 
     private static SecretKeySpec generateKey(String password, byte[] salt) throws Exception {
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, KEY_SIZE); // Consider adjusting iterations
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, KEY_SIZE);
         SecretKey tmp = factory.generateSecret(spec);
         return new SecretKeySpec(tmp.getEncoded(), ALGORITHM);
     }

@@ -117,6 +117,28 @@ public class EventManager {
         eventsForCategory.forEach(System.out::println);
     }
 
+    public void showExcludedEventsForCategory(String category) {
+        List<Event> eventsForCategory = events.stream()
+                .filter(event -> !event.getCategory().equalsIgnoreCase(category))
+                .collect(Collectors.toList());
+        eventsForCategory.forEach(System.out::println);
+    }
+
+    // Show events for multiple specific category
+    public void showEventsForMultipleCategories(String[] categories) {
+        List<Event> eventsForCategories = events.stream()
+                .filter(event -> {
+                    for (String category : categories) {
+                        if (event.getCategory().equalsIgnoreCase(category)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+        eventsForCategories.forEach(System.out::println);
+    }
+
     // Show events after a specific date
     public void showEventsAfterDate(LocalDate date) {
         List<Event> eventsAfterDate = events.stream()

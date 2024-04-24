@@ -118,12 +118,19 @@ public class Main {
             int index = argList.indexOf("--before-date");
             LocalDate date = LocalDate.parse(args[index + 1]);
             eventManager.showEventsBeforeDate(date);
-        }
-        else if (argList.contains("--category")) {
+        } else if (argList.contains("--category")) {
             // Show events for a specific category
             int index = argList.indexOf("--category");
             String category = args[index + 1];
-            eventManager.showEventsForCategory(category);
+            if (argList.contains("--exclude")) {
+                eventManager.showExcludedEventsForCategory(category);
+                // if there are multiple categories, show events for all of them
+            } else if (category.contains(",")) {
+                String[] categories = category.split(",");
+                eventManager.showEventsForMultipleCategories(categories);
+            } else {
+                eventManager.showEventsForCategory(category);
+            }
         } else if (argList.contains("--after-date")) {
             // Show events after a specific date
             int index = argList.indexOf("--after-date");
